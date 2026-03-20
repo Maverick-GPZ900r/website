@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashish Kapoor — Director of Product · AI & Enterprise Platforms</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #0a0a0a;
+    --paper:  #f5f2ec;
+    --accent: #c8391a;
+    --muted:  #6b6560;
+    --line:   rgba(10,10,10,0.12);
+    --gold:   #b8924a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.4rem 4rem;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    animation: fadeDown 0.8s 0.2s forwards;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px; overflow: hidden;
+  }
+  .hero-left {
+    padding: 5rem 4rem 4rem;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 7vw, 7.5rem); font-weight: 300;
+    line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+  }
+  .hero-name em { font-style: italic; color: var(--accent); }
+  .hero-title {
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); border-left: 2px solid var(--accent);
+    padding-left: 1rem; line-height: 1.8; margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .hero-summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 300; line-height: 1.7;
+    color: #2a2a2a; max-width: 520px; margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.9s 1.1s forwards;
+  }
+  .hero-cta {
+    display: flex; gap: 1.2rem; align-items: center;
+    opacity: 0; animation: fadeUp 0.9s 1.3s forwards;
+  }
+  .btn-primary {
+    background: var(--ink); color: var(--paper);
+    padding: 0.9rem 2rem; font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    text-decoration: none; transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-ghost {
+    color: var(--ink); font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* Hero right panel */
+  .hero-right {
+    position: relative; overflow: hidden;
+    opacity: 0; animation: fadeIn 1.2s 0.8s forwards;
+  }
+  .hero-right::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 50%, #1a1208 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(200,57,26,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,57,26,0.15) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-stat-block {
+    position: absolute; bottom: 4rem; left: 3rem;
+    display: flex; flex-direction: column; gap: 2rem;
+  }
+  .hero-stat { display: flex; flex-direction: column; gap: 0.3rem; }
+  .hero-stat-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 2.8rem; color: var(--paper); line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(245,242,236,0.5);
+  }
+  .hero-accent-line {
+    position: absolute; top: 3rem; right: 3rem;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1rem; color: rgba(245,242,236,0.3);
+    writing-mode: vertical-rl; letter-spacing: 0.1em;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 6rem 4rem; }
+  .section-label {
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300;
+    line-height: 1.1; margin-bottom: 3rem;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* ── IMPACT ── */
+  .impact { background: var(--ink); padding: 5rem 4rem; }
+  .impact-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border: 1px solid rgba(245,242,236,0.1);
+  }
+  .impact-item {
+    padding: 3rem 2.5rem;
+    border-right: 1px solid rgba(245,242,236,0.1);
+    transition: background 0.3s;
+  }
+  .impact-item:last-child { border-right: none; }
+  .impact-item:hover { background: rgba(200,57,26,0.08); }
+  .impact-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 3.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.5rem;
+  }
+  .impact-desc {
+    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(245,242,236,0.55); line-height: 1.7;
+  }
+
+  /* ── EXPERIENCE ── */
+  .experience { background: var(--paper); }
+  .exp-list { display: flex; flex-direction: column; }
+  .exp-item {
+    display: grid; grid-template-columns: 220px 1fr;
+    gap: 3rem; padding: 3rem 0; border-bottom: 1px solid var(--line);
+    transition: all 0.3s;
+  }
+  .exp-item:hover .exp-company { color: var(--accent); }
+  .exp-company {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 0.4rem; transition: color 0.2s;
+  }
+  .exp-period {
+    font-size: 0.65rem; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase;
+  }
+  .exp-role-tag {
+    display: inline-block; margin-top: 0.8rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(200,57,26,0.08); border: 1px solid rgba(200,57,26,0.25);
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+  }
+  .exp-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400; line-height: 1.3; margin-bottom: 1rem;
+  }
+  .exp-desc { font-size: 0.78rem; line-height: 1.8; color: #3a3a3a; margin-bottom: 1.2rem; }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .exp-tag {
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.2rem 0.7rem; border: 1px solid var(--line); color: var(--muted);
+  }
+
+  /* ── COMPETENCIES ── */
+  .competencies { background: #f0ece3; padding: 6rem 4rem; }
+  .comp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 3rem; }
+  .comp-card {
+    background: var(--paper); padding: 2.5rem;
+    position: relative; overflow: hidden; transition: transform 0.3s;
+  }
+  .comp-card:hover { transform: translateY(-4px); }
+  .comp-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent); transform: scaleX(0);
+    transition: transform 0.3s; transform-origin: left;
+  }
+  .comp-card:hover::before { transform: scaleX(1); }
+  .comp-number {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 3rem; color: rgba(10,10,10,0.06); line-height: 1; margin-bottom: 1rem;
+  }
+  .comp-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .comp-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .comp-list li {
+    font-size: 0.72rem; line-height: 1.6; color: var(--muted);
+    padding-left: 1rem; position: relative;
+  }
+  .comp-list li::before {
+    content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.65rem;
+  }
+
+  /* ── AWARDS ── */
+  .awards {
+    background: var(--ink); color: var(--paper); padding: 5rem 4rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+  }
+  .awards-left .section-title { color: var(--paper); margin-bottom: 0; }
+  .awards-left .section-title em { color: var(--accent); }
+  .awards-right { display: flex; flex-direction: column; gap: 2rem; }
+  .award-item {
+    display: flex; gap: 2rem; align-items: flex-start;
+    padding: 2rem; border: 1px solid rgba(245,242,236,0.08); transition: border-color 0.3s;
+  }
+  .award-item:hover { border-color: var(--accent); }
+  .award-icon {
+    font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300;
+    color: var(--accent); line-height: 1; min-width: 2.5rem; text-align: center;
+  }
+  .award-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+  .award-desc { font-size: 0.7rem; color: rgba(245,242,236,0.5); line-height: 1.7; }
+
+  /* ── EDUCATION ── */
+  .education { background: var(--paper); padding: 6rem 4rem; }
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+  .edu-card { padding: 2.5rem; border: 1px solid var(--line); transition: border-color 0.3s; }
+  .edu-card:hover { border-color: var(--accent); }
+  .edu-type {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+  }
+  .edu-degree {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400; line-height: 1.3; margin-bottom: 0.5rem;
+  }
+  .edu-school {
+    font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* ── CONTACT ── */
+  .contact {
+    background: var(--accent); color: var(--paper); padding: 6rem 4rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .contact-eyebrow {
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(245,242,236,0.6); margin-bottom: 1rem;
+  }
+  .contact-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; line-height: 1.1;
+  }
+  .contact-right { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    padding-bottom: 1.5rem; border-bottom: 1px solid rgba(245,242,236,0.2);
+  }
+  .contact-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .contact-label {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(245,242,236,0.6);
+  }
+  .contact-value {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 300;
+  }
+  .contact-value a { color: var(--paper); text-decoration: none; }
+  .contact-value a:hover { opacity: 0.8; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(245,242,236,0.3);
+    padding: 2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Staggered children */
+  .reveal-group > * {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal-group.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay: 0s; }
+  .reveal-group.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay: 0.1s; }
+  .reveal-group.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay: 0.2s; }
+  .reveal-group.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 4rem 2rem 3rem; }
+    section { padding: 4rem 2rem; }
+    .impact-grid { grid-template-columns: repeat(2, 1fr); }
+    .impact-item { border-bottom: 1px solid rgba(245,242,236,0.1); }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .comp-grid { grid-template-columns: 1fr; }
+    .awards { grid-template-columns: 1fr; gap: 3rem; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .contact { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Ashish Kapoor</div>
+  <ul class="nav-links">
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#competencies">Skills</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Director of Product · Principal PM · Greater New York</p>
+    <h1 class="hero-name">Ashish<br><em>Kapoor</em></h1>
+    <div class="hero-title">
+      AI &amp; Enterprise Platform Strategy<br>
+      0→1 Builder · Cross-Functional Org Leader<br>
+      14 Years · Fortune 500 · $14M+ ARR
+    </div>
+    <p class="hero-summary">
+      Builds what doesn't exist and scales what can't afford to fail. Strategy, org-wide alignment, and platform delivery at Fortune 500 scale — across AI, fintech, and regulated enterprise environments.
+    </p>
+    <div class="hero-cta">
+      <a href="#experience" class="btn-primary">View Work</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid"></div>
+    <div class="hero-stat-block">
+      <div class="hero-stat">
+        <span class="hero-stat-num">$1.8B</span>
+        <span class="hero-stat-label">Platform revenue contribution · Kroll acquisition</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">2×</span>
+        <span class="hero-stat-label">Enterprise Excellence Award · #1 of 100+ submissions</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">14yr</span>
+        <span class="hero-stat-label">Director-level product leadership · Fortune 500</span>
+      </div>
+    </div>
+    <div class="hero-accent-line">Strategy · Execution · Scale</div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<div class="impact">
+  <div class="impact-grid reveal-group">
+    <div class="impact-item">
+      <div class="impact-num">$106M+</div>
+      <div class="impact-desc">Measured business impact driven by product strategy at TD Bank</div>
+    </div>
+    <div class="impact-item">
+      <div class="impact-num">86%</div>
+      <div class="impact-desc">User engagement lift — outcome of data-informed product decisions</div>
+    </div>
+    <div class="impact-item">
+      <div class="impact-num">80%</div>
+      <div class="impact-desc">Alert noise reduction via AI pipeline — 5× industry benchmark</div>
+    </div>
+    <div class="impact-item">
+      <div class="impact-num">40%</div>
+      <div class="impact-desc">Transaction cost reduction through modern platform architecture</div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <p class="section-label reveal">Selected Experience</p>
+  <h2 class="section-title reveal">Platform Bets<br><em>I Owned</em></h2>
+  <div class="exp-list">
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-company">TD Bank</div>
+        <div class="exp-period">2023 – Present</div>
+        <div class="exp-role-tag">Director-Level · Sr. Lead PM</div>
+      </div>
+      <div class="exp-content">
+        <h3 class="exp-headline">0→1 Digital Platform Strategy · AI-Powered Operations</h3>
+        <p class="exp-desc">Defined the product strategy and end-to-end roadmap for TD's first digital disputes channel — no prior infrastructure existed. Drove cross-functional alignment across engineering, compliance, risk, and C-suite stakeholders to ship 3 sequential MVPs concurrently across debit, credit, and co-branded card lines. Separately identified and championed the AIOps opportunity from zero: assembled a cross-org team of 5–10 SMEs, architected the enterprise telemetry and event correlation pipeline, and drove the initiative from business case to live production — now actively reducing operational overhead across a bank processing millions in daily transactions.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Platform Strategy</span>
+          <span class="exp-tag">Cross-Functional Leadership</span>
+          <span class="exp-tag">AIOps · LLMs</span>
+          <span class="exp-tag">Regulated Environment</span>
+          <span class="exp-tag">$106M+ Impact</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-company">Fiserv</div>
+        <div class="exp-period">2020 – 2022</div>
+        <div class="exp-role-tag">Portfolio Lead · AI &amp; FinTech</div>
+      </div>
+      <div class="exp-content">
+        <h3 class="exp-headline">Multi-Product Portfolio · Consumer AI &amp; Infrastructure Visibility</h3>
+        <p class="exp-desc">Owned product strategy across two simultaneous platform bets inside a payments company processing trillions annually. Defined the vision, north star metrics, and full roadmap for a consumer financial wellness platform embedded inside Fiserv's bank client apps — leveraging Predictive Behavioral Analytics to drive proactive financial nudges at scale. Concurrently owned Notifi, a real-time infrastructure observability product giving Fiserv's C-suite instant signal on critical service health. Managed competing stakeholder priorities across multiple business units while maintaining delivery velocity on both tracks.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Multi-Product Ownership</span>
+          <span class="exp-tag">Consumer AI</span>
+          <span class="exp-tag">North Star Metrics</span>
+          <span class="exp-tag">Stakeholder Alignment</span>
+          <span class="exp-tag">FinTech at Scale</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-company">RxSense</div>
+        <div class="exp-period">2019</div>
+        <div class="exp-role-tag">Principal PM · 0→1 Greenfield</div>
+      </div>
+      <div class="exp-content">
+        <h3 class="exp-headline">Greenfield Platform Strategy · PBM Adjudication Engine</h3>
+        <p class="exp-desc">Parachuted into a highly technical, regulated domain with zero prior context. Applied first-principles thinking to independently master pharmacy benefits management architecture, then led 3 months of structured discovery with clinical and operations SMEs to define the full system requirements. Drove the strategic decision to bypass legacy mainframes entirely in favor of modern .NET architecture — a build-vs-buy call that unlocked an estimated 40% reduction in transaction costs. Delivered a live, production-grade MVP on time, with trained team and a sustainable roadmap still in active commercial use.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">First Principles Thinking</span>
+          <span class="exp-tag">Build vs. Buy</span>
+          <span class="exp-tag">Healthcare · Regulated</span>
+          <span class="exp-tag">40% Cost Reduction</span>
+          <span class="exp-tag">0→1 Ownership</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-company">NBA</div>
+        <div class="exp-period">2015</div>
+        <div class="exp-role-tag">Portfolio Lead · League Platforms</div>
+      </div>
+      <div class="exp-content">
+        <h3 class="exp-headline">Commercial Platform Ownership · $1B+ Revenue Surface</h3>
+        <p class="exp-desc">Took ownership of a legacy platform with no roadmap, no documentation, and no clear product direction — while it was actively supporting $1B+ in NBA media and commercial revenue. Moved from zero context to full strategic ownership within weeks. Delivered a roadmap spanning league scheduling, broadcast production planning, and premium commercial inventory tied directly to sponsorship contracts and broadcast windows — making this a direct revenue-generating product, not just an operations tool. Separately led a full CMS migration from a dead-end proprietary system to WordPress, restoring editorial velocity for a league with hundreds of millions of global fans.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Commercial Revenue Product</span>
+          <span class="exp-tag">Rapid Roadmap Ownership</span>
+          <span class="exp-tag">$1B+ Platform</span>
+          <span class="exp-tag">Editorial Systems</span>
+          <span class="exp-tag">Media &amp; Sports</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-company">Primeclerk</div>
+        <div class="exp-period">2013 – 2014</div>
+        <div class="exp-role-tag">Principal Product Architect · Founding PM</div>
+      </div>
+      <div class="exp-content">
+        <h3 class="exp-headline">0→1 Venture Build · Industry-Defining Legal Tech Platform</h3>
+        <p class="exp-desc">Joined as the founding product voice on a startup with a business concept and no product. Applied structured discovery across 3–6 months with legal domain SMEs to translate complex court filing rules, creditor workflows, and document management requirements into a coherent system architecture. Defined product strategy, wrote the foundational PRDs, and drove the platform from whiteboard to live production handling real bankruptcy cases under court deadlines. Primeclerk became the industry standard, was acquired twice, and is now a core revenue asset inside Kroll — a business valued at $1.8B.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Founding PM</span>
+          <span class="exp-tag">0→1 Strategy</span>
+          <span class="exp-tag">Structured Discovery</span>
+          <span class="exp-tag">$1.8B Exit</span>
+          <span class="exp-tag">LegalTech</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-company">J&amp;J / Janssen</div>
+        <div class="exp-period">2015 – 2018</div>
+        <div class="exp-role-tag">Product Lead · Global Platforms</div>
+      </div>
+      <div class="exp-content">
+        <h3 class="exp-headline">Global Org Alignment · Compliance-Grade Platform Rollout</h3>
+        <p class="exp-desc">Engaged directly by J&amp;J's global C-suite to solve a fragmented 300-person division operating across multiple continents with inconsistent workflows and no unified operating model. Led structured discovery across geographies, rebuilt core processes under a single framework, and drove full global adoption against significant organizational resistance. Co-designed a validation-aware JIRA and Confluence configuration with Atlassian — purpose-built for FDA-regulated pharma delivery with full audit trail support across 300+ users in a CSV-controlled environment.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">Global Org Leadership</span>
+          <span class="exp-tag">C-Suite Engagement</span>
+          <span class="exp-tag">FDA Regulated</span>
+          <span class="exp-tag">Change Management</span>
+          <span class="exp-tag">300+ Users</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPETENCIES -->
+<section class="competencies" id="competencies">
+  <p class="section-label reveal">Core Competencies</p>
+  <h2 class="section-title reveal">How I<br><em>Lead</em></h2>
+  <div class="comp-grid">
+
+    <div class="comp-card reveal">
+      <div class="comp-number">01</div>
+      <div class="comp-title">Product Strategy &amp; Vision</div>
+      <ul class="comp-list">
+        <li>0→1 Platform Strategy &amp; Roadmapping</li>
+        <li>Multi-Product Portfolio Ownership</li>
+        <li>P&amp;L Accountability ($14M+ ARR)</li>
+        <li>North Star Metrics &amp; OKR Frameworks</li>
+        <li>Build vs. Buy Strategic Frameworks</li>
+        <li>Structured Discovery &amp; Voice of Customer</li>
+      </ul>
+    </div>
+
+    <div class="comp-card reveal">
+      <div class="comp-number">02</div>
+      <div class="comp-title">AI &amp; Emerging Technology</div>
+      <ul class="comp-list">
+        <li>Agentic AI · GenAI · LLMs / MCP</li>
+        <li>AI Pipeline Design (IBM Watson AIOps)</li>
+        <li>Prompt Engineering</li>
+        <li>Vector Databases &amp; Event Correlation</li>
+        <li>Pega Blueprint AI · Blue Prism · N8N</li>
+        <li>Telemetry Architecture &amp; CI Mapping</li>
+      </ul>
+    </div>
+
+    <div class="comp-card reveal">
+      <div class="comp-number">03</div>
+      <div class="comp-title">Cross-Functional Leadership</div>
+      <ul class="comp-list">
+        <li>C-Suite Stakeholder Influence</li>
+        <li>Cross-Org Team Assembly &amp; PM Mentorship</li>
+        <li>Agile / SAFe · JIRA &amp; Confluence</li>
+        <li>PRD Authorship at Enterprise Scale</li>
+        <li>Regulated Environments (FDA, Banking)</li>
+        <li>Global Org Alignment &amp; Change Management</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section class="awards" id="awards">
+  <div class="awards-left reveal">
+    <p class="section-label" style="color:rgba(245,242,236,0.4)">Recognition</p>
+    <h2 class="section-title">Validated<br>by<br><em>Outcomes</em></h2>
+  </div>
+  <div class="awards-right">
+    <div class="award-item reveal">
+      <div class="award-icon">★</div>
+      <div>
+        <div class="award-title">2× Delivery Excellence Award — TD Bank</div>
+        <div class="award-desc">Ranked #1 out of 100+ enterprise-wide submissions in consecutive years. Recognition for driving measurable business outcomes through ruthless prioritization, cross-functional alignment, and sustained delivery under enterprise complexity.</div>
+      </div>
+    </div>
+    <div class="award-item reveal">
+      <div class="award-icon">◈</div>
+      <div>
+        <div class="award-title">IBM AI Product Manager Professional Certification</div>
+        <div class="award-desc">Certified practitioner in enterprise AI product strategy — applied hands-on across AIOps pipeline design, GenAI platform builds, and LLM-powered product development.</div>
+      </div>
+    </div>
+    <div class="award-item reveal">
+      <div class="award-icon">◇</div>
+      <div>
+        <div class="award-title">Leading SAFe 5.1 — Scaled Agile</div>
+        <div class="award-desc">Trained in Scaled Agile Framework for large programs. Applied across multi-team, multi-workstream product builds at Fortune 500 scale.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="education" id="education">
+  <p class="section-label reveal">Education &amp; Certifications</p>
+  <h2 class="section-title reveal">Academic<br><em>Foundation</em></h2>
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <div class="edu-type">Graduate Degree</div>
+      <div class="edu-degree">MBA, Marketing Management</div>
+      <div class="edu-school">Business Administration</div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-type">Executive Education</div>
+      <div class="edu-degree">Organizational Leadership</div>
+      <div class="edu-school">Northwestern University</div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-type">Certification</div>
+      <div class="edu-degree">Certified Scrum Product Owner</div>
+      <div class="edu-school">Scrum Alliance</div>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-type">Certification</div>
+      <div class="edu-degree">CPBA - Certified Pega Business Architect</div>
+      <div class="edu-school">Pega Systems</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left reveal">
+    <p class="contact-eyebrow">Director of Product · Principal PM</p>
+    <h2 class="contact-heading">Let's talk<br>about what<br>you're building.</h2>
+  </div>
+  <div class="contact-right reveal">
+    <div class="contact-item">
+      <span class="contact-label">Email</span>
+      <span class="contact-value"><a href="mailto:inbox.ashishkapoor@gmail.com">inbox.ashishkapoor@gmail.com</a></span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">Phone</span>
+      <span class="contact-value">+1-732-515-3048</span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">LinkedIn</span>
+      <span class="contact-value"><a href="https://www.linkedin.com/in/ashishkapoormba" target="_blank">linkedin.com/in/ashishkapoormba</a></span>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">Location</span>
+      <span class="contact-value">Greater New York, USA</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Ashish Kapoor</span>
+  <span>Director of Product · AI &amp; Enterprise Platforms · Fortune 500</span>
+</footer>
+
+<script>
+  // Scroll reveal — individual elements
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Staggered group reveal
+  const groupObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        groupObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal-group').forEach(el => groupObserver.observe(el));
+
+  // Active nav link highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
