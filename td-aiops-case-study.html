@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TD Bank AIOps — Case Study · Ashish Kapoor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #0a0a0a;
+    --paper:  #f5f2ec;
+    --accent: #c8391a;
+    --muted:  #6b6560;
+    --line:   rgba(10,10,10,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: 'DM Mono', monospace; font-weight: 300; overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.4rem 4rem; background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    opacity: 0; animation: fadeDown 0.8s 0.2s forwards;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; color: var(--ink);
+  }
+  .nav-back {
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--accent); }
+  .nav-back::before { content: '← '; }
+
+  /* HERO */
+  .hero {
+    min-height: 80vh; display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px; overflow: hidden;
+  }
+  .hero-left {
+    padding: 6rem 4rem 4rem;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5.5vw, 6rem); font-weight: 300;
+    line-height: 0.95; letter-spacing: -0.02em; margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-meta {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    border-left: 2px solid var(--accent); padding-left: 1rem; margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .hero-meta span {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .hero-summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 300; line-height: 1.7;
+    color: #2a2a2a; max-width: 520px;
+    opacity: 0; animation: fadeUp 0.9s 1.1s forwards;
+  }
+
+  /* Hero right */
+  .hero-right { position: relative; overflow: hidden; opacity: 0; animation: fadeIn 1.2s 0.8s forwards; }
+  .hero-right::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 50%, #1a1208 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(200,57,26,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,57,26,0.15) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-outcome-block { position: absolute; bottom: 4rem; left: 3rem; right: 3rem; }
+  .hero-outcome-label {
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(245,242,236,0.4); margin-bottom: 1.5rem;
+  }
+  .hero-outcomes { display: flex; flex-direction: column; gap: 1.2rem; }
+  .hero-outcome-item { display: flex; align-items: baseline; gap: 1rem; }
+  .outcome-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 2rem; color: var(--paper); line-height: 1; min-width: 90px;
+  }
+  .outcome-desc {
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(245,242,236,0.5); line-height: 1.5;
+  }
+
+  /* CONTENT */
+  .content { max-width: 820px; margin: 0 auto; padding: 6rem 4rem; }
+  .section-label {
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300;
+    line-height: 1.15; margin-bottom: 2rem;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .body-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-weight: 300; line-height: 1.85;
+    color: #2a2a2a; margin-bottom: 1.5rem;
+  }
+
+  /* Pull quote */
+  .pull-quote {
+    border-left: 3px solid var(--accent); padding: 1.5rem 2rem; margin: 3rem 0;
+    background: rgba(200,57,26,0.04);
+  }
+  .pull-quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 300; font-style: italic; line-height: 1.6; color: var(--ink);
+  }
+
+  /* Tool stack */
+  .tool-stack { background: #f0ece3; padding: 2.5rem; margin: 3rem 0; }
+  .tool-stack-label {
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.2rem;
+  }
+  .tool-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tool-tag {
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem; border: 1px solid var(--line); color: var(--muted); background: var(--paper);
+  }
+
+  /* Decision cards */
+  .decisions { display: flex; flex-direction: column; gap: 2px; margin: 3rem 0; }
+  .decision-card {
+    background: #f0ece3; padding: 2.5rem;
+    position: relative; overflow: hidden; transition: transform 0.3s;
+  }
+  .decision-card:hover { transform: translateX(4px); }
+  .decision-card::before {
+    content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+    background: var(--accent); transform: scaleY(0);
+    transition: transform 0.3s; transform-origin: top;
+  }
+  .decision-card:hover::before { transform: scaleY(1); }
+  .decision-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+  }
+  .decision-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.8rem;
+  }
+  .decision-body { font-size: 0.78rem; line-height: 1.8; color: #3a3a3a; }
+  .decision-outcome {
+    margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line);
+    font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+  }
+
+  /* Pipeline */
+  .pipeline { margin: 3rem 0; padding: 2.5rem; border: 1px solid var(--line); }
+  .pipeline-label {
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .pipeline-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+  .pipeline-step {
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.5rem 1rem; background: var(--ink); color: var(--paper);
+  }
+  .pipeline-arrow { font-size: 0.8rem; color: var(--accent); font-weight: bold; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--line); margin: 4rem 0; }
+
+  /* Reflection */
+  .reflection { background: var(--ink); color: var(--paper); padding: 4rem; margin: 4rem 0; }
+  .reflection-label {
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .reflection-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300; font-style: italic; line-height: 1.4; margin-bottom: 1.5rem;
+  }
+  .reflection-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 300; line-height: 1.85; color: rgba(245,242,236,0.75);
+  }
+
+  /* Legacy quote */
+  .legacy-quote { border: 1px solid var(--accent); padding: 2.5rem; margin: 3rem 0; }
+  .legacy-quote-label {
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .legacy-quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 300; font-style: italic; line-height: 1.7; color: var(--ink);
+  }
+  .legacy-quote-source {
+    margin-top: 0.8rem; font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* Outcome bar */
+  .outcome-bar {
+    background: var(--accent); padding: 4rem;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 4rem 0;
+  }
+  .outcome-stat { display: flex; flex-direction: column; gap: 0.5rem; }
+  .outcome-stat-num {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.5rem; color: var(--paper); line-height: 1;
+  }
+  .outcome-stat-label {
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,242,236,0.7); line-height: 1.5;
+  }
+
+  /* Back CTA */
+  .back-cta { text-align: center; padding: 4rem 0; border-top: 1px solid var(--line); }
+  .back-cta a {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--ink); padding-bottom: 3px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .back-cta a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1), transform 0.75s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 4rem 2rem 3rem; }
+    .content { padding: 4rem 2rem; }
+    .outcome-bar { grid-template-columns: 1fr; }
+    .reflection { padding: 2.5rem 2rem; }
+    .pipeline-steps { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://ashishkapoor.me" class="nav-logo">Ashish Kapoor</a>
+  <a href="https://ashishkapoor.me" class="nav-back">Back to Portfolio</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Case Study · 2023–Present · Enterprise AI · TD Bank</p>
+    <h1 class="hero-title">Turning Alert<br>Chaos into<br><em>Signal</em></h1>
+    <div class="hero-meta">
+      <span>Company — TD Bank</span>
+      <span>Role — Director-Level · Senior Lead PM</span>
+      <span>Domain — AIOps · Enterprise Monitoring · AI Pipeline</span>
+    </div>
+    <p class="hero-summary">
+      A bank processing billions in daily transactions was drowning in alert noise across four monitoring layers, two data centers, and multiple lines of business. No single team had visibility across the full estate. The brief was to fix that, using AI.
+    </p>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid"></div>
+    <div class="hero-outcome-block">
+      <div class="hero-outcome-label">Outcome</div>
+      <div class="hero-outcomes">
+        <div class="hero-outcome-item">
+          <span class="outcome-num">80%</span>
+          <span class="outcome-desc">Projected alert noise<br>reduction · 5× industry benchmark</span>
+        </div>
+        <div class="hero-outcome-item">
+          <span class="outcome-num">4</span>
+          <span class="outcome-desc">Monitoring layers unified<br>across multiple LOBs</span>
+        </div>
+        <div class="hero-outcome-item">
+          <span class="outcome-num">Live</span>
+          <span class="outcome-desc">Pipeline active and deduplicating<br>alerts in production</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content">
+
+  <div class="reveal">
+    <p class="section-label">The Brief</p>
+    <h2 class="section-title">A monitoring estate<br>nobody fully<br><em>understood.</em></h2>
+    <p class="body-text">
+      TD Bank's monitoring organization came to us with a clear problem and a complex landscape. Across four infrastructure layers, L1 through L4, two physical data centers in Scarborough and Barrie, and multiple lines of business, dozens of monitoring tools were running in parallel. Many were performing overlapping or redundant functions. Few were connected to each other. The same underlying incident could trigger independent alerts simultaneously across multiple layers and teams, none of whom had visibility into what the others were seeing.
+    </p>
+    <p class="body-text">
+      The result was a NOC and operations function buried in alert volume, spending significant time triaging noise rather than responding to real incidents. In a bank processing billions in daily transactions, delayed incident response carries direct financial and compliance consequences. The brief was to architect an AI-powered pipeline that could ingest alerts from across this fragmented estate, correlate them intelligently, and surface a single actionable incident story to operators, instead of dozens of disconnected alerts.
+    </p>
+  </div>
+
+  <div class="tool-stack reveal">
+    <div class="tool-stack-label">Monitoring Tools in Scope</div>
+    <div class="tool-tags">
+      <span class="tool-tag">IBM Netcool</span>
+      <span class="tool-tag">Datadog</span>
+      <span class="tool-tag">Dynatrace</span>
+      <span class="tool-tag">Splunk</span>
+      <span class="tool-tag">Grafana</span>
+      <span class="tool-tag">SolarWinds</span>
+      <span class="tool-tag">PagerDuty</span>
+      <span class="tool-tag">xMatters</span>
+      <span class="tool-tag">F5</span>
+      <span class="tool-tag">Ansible</span>
+      <span class="tool-tag">CyberArk</span>
+      <span class="tool-tag">Tufin SecureTrack</span>
+      <span class="tool-tag">Hitachi Suite</span>
+      <span class="tool-tag">Dell Suite</span>
+      <span class="tool-tag">+ Additional tools</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="reveal">
+    <p class="section-label">The Discovery</p>
+    <h2 class="section-title">Mapping what<br>nobody had<br><em>mapped before.</em></h2>
+    <p class="body-text">
+      Before IBM AIOps could correlate a single alert, we needed a clean, accurate map of every Configuration Item across the estate; who owned it, what was monitoring it, and how it related to everything else. That map didn't exist. It lived partially in ServiceNow's CMDB, partially in the heads of SMEs across multiple teams, and partially nowhere at all.
+    </p>
+    <p class="body-text">
+      We structured discovery across all four layers. L1 was relatively cooperative; a small group of IBM Netcool specialists could walk us through the foundational alerting architecture. L2 and L3 became progressively more complex, requiring us to work with TD leadership to identify and engage three to four SMEs per layer across the primary lines of business. Getting the right people to the table required both executive support and a deliberate effort to create psychological safety in the sessions; these were conversations that surfaced gaps, redundancies, and ownership ambiguities that teams hadn't previously been asked to expose.
+    </p>
+    <p class="body-text">
+      The CMDB work was particularly intensive. We downloaded CI ownership lists from ServiceNow Discovery, cleansed the data, and went back to LOB SMEs to validate and correct it. There were instances where the CMDB was simply wrong; ownership had changed, tools had been decommissioned, or new infrastructure had been added without corresponding CMDB updates. Every discrepancy had to be resolved before it could feed the topology model.
+    </p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>"Getting the right people in the room is harder than building the pipeline. The AI is only as good as the topology feeding it."</p>
+  </div>
+
+  <div class="reveal">
+    <p class="body-text">
+      We also encountered something that made the problem significantly harder: duplicate monitoring within single lines of business. The same CI was being monitored simultaneously by Datadog and Dynatrace, with both feeding into Splunk and reporting through Grafana. This wasn't negligence; it was the result of different teams acquiring different tools independently over time, with no central governance to rationalize the estate. Before AIOps could deduplicate alerts across teams, we first had to eliminate redundant monitoring within them.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="reveal">
+    <p class="section-label">The Hard Calls</p>
+    <h2 class="section-title">Three decisions<br>that shaped<br><em>the outcome.</em></h2>
+  </div>
+
+  <div class="decisions">
+    <div class="decision-card reveal">
+      <div class="decision-num">Decision 01</div>
+      <div class="decision-title">Starting at L1 and Building Outward</div>
+      <div class="decision-body">
+        With four layers and multiple LOBs in scope, there was a deliberate choice about where to begin. We started at L1, the most cooperative layer with the clearest ownership and the most mature tooling. This wasn't the path of least resistance for its own sake; it was a sequencing strategy. Establishing a clean, validated topology at L1 gave the AI pipeline a reliable foundation to build on, and it gave us credibility with the harder layers above. By the time we were engaging L2 and L3 SMEs, we had a working model to show rather than a theoretical proposal to sell.
+      </div>
+      <div class="decision-outcome">Outcome → Built credibility and pipeline foundation before tackling organizational complexity</div>
+    </div>
+
+    <div class="decision-card reveal">
+      <div class="decision-num">Decision 02</div>
+      <div class="decision-title">Leading With Data to Drive Tool Decommissioning</div>
+      <div class="decision-body">
+        Getting LOB teams to turn off monitoring tools they had chosen and trusted was one of the most politically sensitive challenges of the engagement. These teams had deployed duplicate tooling for a reason; they didn't trust other layers to catch what they needed caught. Rather than leading with authority or top-down mandates, we led with data. The financial case was clear: redundant licensing costs, redundant maintenance overhead, and measurable alert noise directly attributable to tool duplication. Where teams resisted at the SME level, the cost savings narrative gave leadership the justification to move the decision upward. Executive cover was the backstop, not the opening move.
+      </div>
+      <div class="decision-outcome">Outcome → Decommissioned redundant tools without triggering organizational resistance</div>
+    </div>
+
+    <div class="decision-card reveal">
+      <div class="decision-num">Decision 03</div>
+      <div class="decision-title">Flagging End-of-Life Tools and Recommending Replacements</div>
+      <div class="decision-body">
+        During the CI mapping and discovery process, we identified several tools across the estate that were at or approaching end-of-life, carrying security risk, unsupported vendor patches, or both. Rather than treating these as out of scope, we documented them and brought forward replacement recommendations as part of the broader engagement. This expanded the brief beyond alert noise reduction into a monitoring estate health assessment. A pipeline built on top of EOL tooling would have introduced new risk at the same time it was reducing old risk; the right call was to surface it.
+      </div>
+      <div class="decision-outcome">Outcome → Delivered a monitoring estate health assessment alongside the AIOps pipeline</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="reveal">
+    <p class="section-label">The Architecture</p>
+    <h2 class="section-title">From fragmented<br>noise to a single<br><em>alert story.</em></h2>
+    <p class="body-text">
+      The IBM AIOps pipeline operates in several stages. Alerts from all monitoring tools are ingested and normalized into a common schema, so the system can reason across sources that previously spoke different languages. The cleaned CI topology from ServiceNow feeds a dynamic infrastructure graph, allowing the AI to understand relationships between components; a CPU spike on a node, a pod restart in Kubernetes, and a service latency alert in APM are no longer three separate incidents but three symptoms of one.
+    </p>
+    <p class="body-text">
+      Deduplication eliminates repeated alerts for the same metric on the same CI within a time window, typically reducing 30 to 40 percent of alert traffic on its own. AI-based temporal correlation then groups the remaining alerts by causal pattern, learning over time which sequences of events belong to the same underlying incident. The output to operators is a single correlated alert story: one incident, one probable root cause, all contributing symptoms grouped. The pipeline integrates end-to-end with JIRA for ticketing and xMatters for escalation and notification.
+    </p>
+  </div>
+
+  <div class="pipeline reveal">
+    <div class="pipeline-label">Alert Pipeline — End to End</div>
+    <div class="pipeline-steps">
+      <span class="pipeline-step">Multi-Source Ingestion</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">Normalization</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">CI Topology Mapping</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">Deduplication</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">AI Correlation</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">Root Cause Analysis</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">Single Alert Story</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-step">JIRA · xMatters</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="reveal">
+    <p class="section-label">The Outcome</p>
+    <h2 class="section-title">Measurable reduction.<br><em>Lasting impact.</em></h2>
+    <p class="body-text">
+      The pipeline went live and began actively deduplicating and correlating alerts across the estate. Alert reduction was evident at each layer as the pipeline came online; the combination of deduplication, topology correlation, and AI pattern detection is projected to reduce duplicate and false-positive alerts by 80 percent, benchmarked against industry standards and validated through pilot data. For a bank of TD's scale, that reduction translates directly into faster incident response, lower operational overhead, and reduced compliance risk.
+    </p>
+    <p class="body-text">
+      The consolidation extended beyond the pipeline itself. Manual leadership reports that had previously required human compilation across multiple monitoring tools were replaced by active dashboards in Splunk, giving leadership real-time visibility into the health of the monitoring estate without the latency of periodic reporting.
+    </p>
+  </div>
+
+  <div class="outcome-bar reveal">
+    <div class="outcome-stat">
+      <span class="outcome-stat-num">80%</span>
+      <span class="outcome-stat-label">Projected alert noise reduction · 5× industry benchmark</span>
+    </div>
+    <div class="outcome-stat">
+      <span class="outcome-stat-num">Live</span>
+      <span class="outcome-stat-label">Pipeline active in production across TD's monitoring estate</span>
+    </div>
+    <div class="outcome-stat">
+      <span class="outcome-stat-num">4 Layers</span>
+      <span class="outcome-stat-label">L1 through L4 unified across multiple lines of business</span>
+    </div>
+  </div>
+
+  <div class="legacy-quote reveal">
+    <div class="legacy-quote-label">Legacy · 2025</div>
+    <p>"In 2025, the bank significantly updated its compliance monitoring by integrating AI-driven tools to enhance the detection of high-risk activity."</p>
+    <div class="legacy-quote-source">Public reporting on TD Bank's AI monitoring capabilities · 2025</div>
+  </div>
+
+  <div class="reveal">
+    <p class="body-text">
+      What began as an alert noise reduction initiative has since expanded into a broader AI-driven compliance monitoring capability at TD. The architectural foundation laid during this engagement, clean CI topology, normalized multi-source ingestion, and AI-based correlation, became the infrastructure on which TD's next generation of monitoring was built.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="reflection reveal">
+    <div class="reflection-label">Reflection</div>
+    <h3 class="reflection-title">"What I'd do differently."</h3>
+    <p class="reflection-body">
+      If I were starting this engagement today, I would begin with a larger team and push harder, earlier, to get the right stakeholders to the table. The most expensive moments in this engagement were the last-minute changes driven by late-arriving SMEs; people who had critical knowledge about specific tooling or CI ownership but weren't identified or made available until discovery was already well underway. In an environment this complex, stakeholder mapping is as important as technical architecture. The pipeline you design is only as accurate as the people who informed it, and every gap in that group becomes a gap in the topology, which becomes noise in the output. Getting the right people in the room early isn't a logistics problem; it's a product quality problem.
+    </p>
+  </div>
+
+  <div class="back-cta reveal">
+    <a href="https://ashishkapoor.me">← Back to Portfolio</a>
+  </div>
+
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
